@@ -36,6 +36,7 @@ class ON_Model
     //parameters of the lattice:
     uint    D_;       //dimension
     uint    N_;       //number of spins living on the hyperrectangle
+    uint    alpha_;   //number of replicas (Renyi index)
     uint*   L_;       //lattice's linear length in each dimension
     
     //acceptance rates for the two kinds of updates:

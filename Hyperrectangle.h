@@ -58,6 +58,7 @@ class Hyperrectangle
     uint  getN();
     uint  getZ();
     uint  getD();
+    uint  getAlpha();
     uint* getL();
 };
 

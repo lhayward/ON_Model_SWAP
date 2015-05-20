@@ -193,7 +193,8 @@ uint Hyperrectangle::uintPower(uint base, uint exp)
 } //uintPower method
 
 /*********************************** Public Getter Methods: **********************************/
-uint  Hyperrectangle::getN(){ return N_; }
-uint  Hyperrectangle::getZ(){ return z_; }
-uint  Hyperrectangle::getD(){ return D_; }
-uint* Hyperrectangle::getL(){ return L_; }
+uint  Hyperrectangle::getN    (){ return N_;     }
+uint  Hyperrectangle::getZ    (){ return z_;     }
+uint  Hyperrectangle::getD    (){ return D_;     }
+uint  Hyperrectangle::getAlpha(){ return alpha_; }
+uint* Hyperrectangle::getL    (){ return L_;     }

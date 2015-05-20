@@ -35,9 +35,10 @@ ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* 
   if( lattice != NULL )
   {
     hrect_ = lattice;
-    D_ = hrect_->getD();
-    L_ = hrect_->getL();
-    N_ = hrect_->getN();
+    D_     = hrect_->getD();
+    L_     = hrect_->getL();
+    N_     = hrect_->getN();
+    alpha_ = hrect_->getAlpha();
   } //if for non-null Lattice object
   else
   {
