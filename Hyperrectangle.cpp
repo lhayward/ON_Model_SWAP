@@ -30,7 +30,6 @@ Hyperrectangle::Hyperrectangle(std::ifstream* fin, std::string fileName)
   { 
     D_     = FileReading::readUint     (fin, EQUALS_CHAR); 
     L_     = FileReading::readUintArray(fin, D_, 1, EQUALS_CHAR, LIST_START_CHAR, LIST_END_CHAR);
-    alpha_ = FileReading::readUint     (fin, EQUALS_CHAR);
     
     N_ = 1;
     for( uint i=0; i<D_; i++ )
@@ -89,6 +88,7 @@ void Hyperrectangle::initNeighbours()
   neighbours_ = new uint*[N_];
   for( uint i=0; i<N_; i++ )
   { neighbours_[i] = new uint[2*D_]; }
+  
   for( uint i=0; i<N_; i++ )
   { 
     for( uint j=0; j<D_; j++ ) 
@@ -129,8 +129,7 @@ void Hyperrectangle::printParams()
   for( uint i=1; i<D_; i++ )
   { std::cout << "                       L[" << i << "] = " << L_[i] << "\n"; }
   
-  std::cout << "          Renyi Index alpha = " << alpha_ << "\n"
-            << "  Number of Lattice Sites N = " << N_ << "\n"
+  std::cout << "  Number of Lattice Sites N = " << N_ << "\n"
             << std::endl;
   
 } //printParams method
@@ -196,5 +195,4 @@ uint Hyperrectangle::uintPower(uint base, uint exp)
 uint  Hyperrectangle::getN    (){ return N_;     }
 uint  Hyperrectangle::getZ    (){ return z_;     }
 uint  Hyperrectangle::getD    (){ return D_;     }
-uint  Hyperrectangle::getAlpha(){ return alpha_; }
 uint* Hyperrectangle::getL    (){ return L_;     }

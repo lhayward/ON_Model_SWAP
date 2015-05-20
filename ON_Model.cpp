@@ -24,8 +24,9 @@ ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* 
   
   if( fin!=NULL && fin->is_open() )
   {
-    J_ = FileReading::readDouble(fin, EQUALS_CHAR);
-    h_ = FileReading::readDouble(fin, EQUALS_CHAR);
+    alpha_ = FileReading::readUint  (fin, EQUALS_CHAR);
+    J_     = FileReading::readDouble(fin, EQUALS_CHAR);
+    h_     = FileReading::readDouble(fin, EQUALS_CHAR);
   }
   else
   { 
@@ -38,7 +39,6 @@ ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* 
     D_     = hrect_->getD();
     L_     = hrect_->getL();
     N_     = hrect_->getN();
-    alpha_ = hrect_->getAlpha();
   } //if for non-null Lattice object
   else
   {
@@ -154,8 +154,9 @@ void ON_Model::printParams()
 {
   std::cout << "O(" << spinDim_ << ") Model Parameters:\n"
             << "---------------------" << std::endl;
-  std::cout << "  J = " << J_ << "\n"
-            << "  h = " << h_ << "\n";
+  std::cout << "  Renyi Index alpha = " << alpha_ << "\n"
+            << "                  J = " << J_ << "\n"
+            << "                  h = " << h_ << "\n";
 }
 
 /************************* writeClustHistoData(std::string fileName) *************************/
