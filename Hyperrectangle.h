@@ -36,6 +36,7 @@ class Hyperrectangle
     uint  N_;           //total number of lattice sites
     uint  z_;           //number of nearest neighbouring sites for each site
     uint  D_;           //dimension
+    uint  alpha_;       //number of replicas (Renyi index)
     uint* L_;           //length in each dimension
     uint** neighbours_; //coordinates of each vertex's nearest neighbours
     

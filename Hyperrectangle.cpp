@@ -28,8 +28,9 @@ Hyperrectangle::Hyperrectangle(std::ifstream* fin, std::string fileName)
   //read in D_ from the file:
   if( fin!=NULL && fin->is_open() )
   { 
-    D_ = FileReading::readUint     (fin, EQUALS_CHAR); 
-    L_ = FileReading::readUintArray(fin, D_, 1, EQUALS_CHAR, LIST_START_CHAR, LIST_END_CHAR);
+    D_     = FileReading::readUint     (fin, EQUALS_CHAR); 
+    L_     = FileReading::readUintArray(fin, D_, 1, EQUALS_CHAR, LIST_START_CHAR, LIST_END_CHAR);
+    alpha_ = FileReading::readUint     (fin, EQUALS_CHAR);
     
     N_ = 1;
     for( uint i=0; i<D_; i++ )
@@ -128,7 +129,8 @@ void Hyperrectangle::printParams()
   for( uint i=1; i<D_; i++ )
   { std::cout << "                       L[" << i << "] = " << L_[i] << "\n"; }
   
-  std::cout << "  Number of Lattice Sites N = " << N_ << "\n"
+  std::cout << "          Renyi Index alpha = " << alpha_ << "\n"
+            << "  Number of Lattice Sites N = " << N_ << "\n"
             << std::endl;
   
 } //printParams method
