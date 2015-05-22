@@ -51,7 +51,7 @@ int main(int argc, char** argv)
   std::string fileSuffix        = getFileSuffix( argc, argv );
   std::string paramFileName     = "params" + fileSuffix + ".txt";
   std::string simParamStr       = "SIMULATION PARAMETERS";
-  std::string latticeParamStr   = "LATTICE PARAMETERS";
+  std::string latticeParamStr   = "SPATIAL LATTICE PARAMETERS";
   std::string modelParamStr     = "MODEL PARAMETERS";
   std::string outFileName       = "bins" + fileSuffix + ".txt";
   std::string outFileName_clust;

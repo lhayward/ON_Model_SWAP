@@ -37,7 +37,8 @@ class ON_Model
     uint    D_;       //dimension
     uint    N_;       //number of spins living on the hyperrectangle
     uint    alpha_;   //number of replicas (Renyi index)
-    uint*   L_;       //lattice's linear length in each dimension
+    uint*   L_;       //lattice's linear length in each spatial dimension
+    uint    Ltau_;    //lattice's linear length in the imaginary time direction
     
     //acceptance rates for the two kinds of updates:
     int numAccept_local_;
