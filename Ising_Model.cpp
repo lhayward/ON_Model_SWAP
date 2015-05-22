@@ -28,7 +28,7 @@ Ising_Model::Ising_Model(std::ifstream* fin, std::string outFileName, Hyperrecta
   std::cout.precision(15);
   
   spinDim_ = 1;
-  spins_ = new IsingSpins(N_);
+  spins_ = new IsingSpins(alpha_, N_);
   randomizeLattice(randomGen);
   
   measures.insert("sigma");
@@ -51,7 +51,7 @@ void Ising_Model::flipCluster(std::vector<uint> &cluster)
   uint clustSize = (uint)cluster.size();
   
   for( uint i=0; i<clustSize; i++ )
-  { spins_->flipSpin(cluster[i]); }
+  { spins_->flipSpin(0, cluster[i]); }  //!!!Change 0 to alpha
 } //flipCluster
 
 /**************************************** getEnergy() ****************************************/
@@ -64,13 +64,14 @@ double Ising_Model::getEnergy()
   
   for( uint i=0; i<N_; i++ )
   { 
-    currSpin    = spins_->getSpin(i);
+    currSpin    = spins_->getSpin(0, i); //!!!Change 0 to alpha
     
     //nearest neighbour term:
     for( uint j=0; j<D_; j++ )
     {
-      neighbour = spins_->getSpin( hrect_->getNeighbour(i,j) ); //nearest neighbour along
-                                                                //j direction
+      neighbour = spins_->getSpin( 0, hrect_->getNeighbour(i,j) ); //nearest neighbour along
+                                                                   //j direction
+                                                                   //!!!Change 0 to alpha
       energyJ   += currSpin*neighbour;
     } //j
     
@@ -87,7 +88,7 @@ int Ising_Model::getSigmaTot()
   int sigmaTot = 0;
   
   for( uint i=0; i<N_; i++ )
-  { sigmaTot += spins_->getSpin(i); }
+  { sigmaTot += spins_->getSpin(0, i); } //!!!Change 0 to alpha
   
   return sigmaTot;
 }
@@ -102,13 +103,13 @@ void Ising_Model::localUpdate(MTRand &randomGen)
   
   //randomly select a spin on the lattice:
   latticeSite = randomGen.randInt(N_-1);
-  spin_old    = spins_->getSpin(latticeSite);
+  spin_old    = spins_->getSpin(0, latticeSite); //!!!Change 0 to alpha
   
   //loop to calculate the nearest neighbour sum:
   for( uint i=0; i<D_; i++ )
   { 
-    nnSum += ( spins_->getSpin( hrect_->getNeighbour( latticeSite, i    ) ) 
-             + spins_->getSpin( hrect_->getNeighbour( latticeSite, i+D_ ) ) );
+    nnSum += ( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i    ) ) 
+             + spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i+D_ ) ) ); //!!!Change 0 to alpha x2
   }
   
   //calculate the energy change for the proposed move:
@@ -117,7 +118,7 @@ void Ising_Model::localUpdate(MTRand &randomGen)
   //if the move is accepted:
   if( deltaE<=0 || randomGen.randDblExc() < exp(-deltaE/T_) )
   { 
-    spins_->flipSpin( latticeSite );
+    spins_->flipSpin( 0, latticeSite ); //!!!Change 0 to alpha
     numAccept_local_++;
   }
 }
@@ -177,7 +178,7 @@ void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
   cluster.reserve(N_);
   
   latticeSite = randomGen.randInt(N_-1);
-  clusterState = spins_->getSpin(latticeSite);
+  clusterState = spins_->getSpin(0, latticeSite); //!!!Change 0 to alpha
   inCluster_[latticeSite] = 1;
   cluster.push_back(latticeSite);
   buffer.push_back(latticeSite);
@@ -191,8 +192,8 @@ void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
     {
       neighSite = hrect_->getNeighbour( latticeSite, i );
       
-      if ( !( inCluster_[ neighSite ] ) && ( spins_->getSpin(neighSite) == clusterState ) 
-           && (randomGen.randDblExc() < PAdd) )
+      if ( !( inCluster_[ neighSite ] ) && ( spins_->getSpin(0, neighSite) == clusterState ) 
+           && (randomGen.randDblExc() < PAdd) ) //!!!Change 0 to alpha
       { 
         inCluster_[ neighSite ] = 1;
         cluster.push_back( neighSite );

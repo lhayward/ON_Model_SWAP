@@ -63,7 +63,6 @@ class ON_Model
     virtual void printParams     ();
     virtual void changeT         (double newT);
     
-    
     //pure virtual methods (to be implemented by all child classes):
     virtual void localUpdate        (MTRand &randomGen) = 0;
     virtual void makeMeasurement    () = 0;

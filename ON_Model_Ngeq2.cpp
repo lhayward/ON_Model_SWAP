@@ -28,7 +28,7 @@ ON_Model_Ngeq2::ON_Model_Ngeq2(uint spinDim, std::ifstream* fin, std::string out
   std::cout.precision(15);
   
   spinDim_ = spinDim;
-  spins_ = new VectorSpins(N_, spinDim_);
+  spins_ = new VectorSpins(alpha_, N_, spinDim_);
   randomizeLattice(randomGen);
   
   measures.insert("sigma1");
@@ -53,7 +53,7 @@ void ON_Model_Ngeq2::flipCluster(std::vector<uint> &cluster, Vector_NDim* r)
   uint clustSize = (uint)cluster.size();
   
   for( uint i=0; i<clustSize; i++ )
-  { spins_->getSpin(cluster[i])->reflectOverUnitVecAndNormalize(r); }
+  { spins_->getSpin(0, cluster[i])->reflectOverUnitVecAndNormalize(r); } //!!!Change 0 to alpha
 } //flipCluster
 
 /*********************************** getClusterOnSiteEnergy ***********************************
@@ -70,8 +70,8 @@ double ON_Model_Ngeq2::getClusterOnSiteEnergy(std::vector<uint> &cluster)
   for( uint i=0; i<clustSize; i++ )
   {
     latticeSite =  cluster[i];
-    currSpin    =  spins_->getSpin(latticeSite);
-    energyh     += currSpin->v_[0];    
+    currSpin    =  spins_->getSpin(0, latticeSite); //!!!Change 0 to alpha
+    energyh     += currSpin->v_[0]; 
   } //for loop
   
   return (-1.0)*h_*energyh;
@@ -88,11 +88,12 @@ double ON_Model_Ngeq2::getEnergy()
   //nearest neighbour term:
   for( uint i=0; i<N_; i++ )
   { 
-    currSpin    = spins_->getSpin(i);
+    currSpin    = spins_->getSpin(0, i); //!!!Change 0 to alpha
     for( uint j=0; j<D_; j++ )
     {
-      neighbour =  spins_->getSpin( hrect_->getNeighbour(i,j) ); //nearest neighbour along 
+      neighbour =  spins_->getSpin( 0, hrect_->getNeighbour(i,j) ); //nearest neighbour along 
                                                                  //j direction
+                                                                 //!!!Change 0 to alpha
       energyJ   += currSpin->dot( neighbour );
     } //j
   } //i
@@ -100,7 +101,7 @@ double ON_Model_Ngeq2::getEnergy()
   //field term:
   for( uint i=0; i<N_; i++ )
   { 
-    currSpin =  spins_->getSpin(i);
+    currSpin =  spins_->getSpin(0,i); //!!!Change 0 to alpha
     energyh  += currSpin->v_[0]; 
   }
   
@@ -119,8 +120,9 @@ double ON_Model_Ngeq2::getHelicityModulus(int dir)
   //loop over all spins:
   for(uint i=0; i<N_; i++)
   {
-   currSpin = spins_->getSpin(i);
-   neigh    = spins_->getSpin( hrect_->getNeighbour(i,dir) ); //nearest neighbour along +x
+   currSpin = spins_->getSpin(0, i); //!!!Change 0 to alpha
+   neigh    = spins_->getSpin( 0, hrect_->getNeighbour(i,dir) ); //nearest neighbour along +x
+                                                                 //!!!Change 0 to alpha
    //neigh = spins[neighbours[i][neighDir]];
    
    sum1 += currSpin->dotForRange(neigh,0,1);
@@ -148,7 +150,7 @@ double ON_Model_Ngeq2::getSigma1Tot()
   int sigma1Tot = 0;
   
   for( uint i=0; i<N_; i++ )
-  { sigma1Tot += spins_->getSpin(i)->v_[0]; }
+  { sigma1Tot += spins_->getSpin(0, i)->v_[0]; } //!!!Change 0 to alpha
   
   return sigma1Tot;
 }
@@ -167,13 +169,13 @@ void ON_Model_Ngeq2::localUpdate(MTRand &randomGen)
   
   //randomly select a spin on the lattice:
   latticeSite = randomGen.randInt(N_-1);
-  spin_old    = spins_->getSpin(latticeSite);
+  spin_old    = spins_->getSpin(0,latticeSite); //!!!Change 0 to alpha
   
   //loop to calculate the nearest neighbour sum:
   for( uint i=0; i<D_; i++ )
   { 
-    nnSum.add( spins_->getSpin( hrect_->getNeighbour( latticeSite, i    ) ) ); 
-    nnSum.add( spins_->getSpin( hrect_->getNeighbour( latticeSite, i+D_ ) ) );
+    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i    ) ) ); //!!!Change 0 to alpha
+    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i+D_ ) ) ); //!!!Change 0 to alpha
   }
   
   //calculate the energy change for the proposed move:
@@ -188,7 +190,7 @@ void ON_Model_Ngeq2::localUpdate(MTRand &randomGen)
     { delete spin_old; }
     spin_old = NULL;
     
-    spins_->setSpin( latticeSite, spin_new );
+    spins_->setSpin( 0, latticeSite, spin_new ); //!!!Change 0 to alpha
     numAccept_local_++;
   }
   //otherwise, the move is rejected:
@@ -276,14 +278,14 @@ void ON_Model_Ngeq2::wolffUpdate(MTRand &randomGen, uint start, uint end, bool p
     
     //Note: the spin at site 'latticeSite' is not flipped yet so we have to consider the
     //      energy difference that would result if it were already flipped:
-    reflectedSpin = spins_->getSpin(latticeSite)->getReflectionAndNormalize(r);
+    reflectedSpin = spins_->getSpin(0,latticeSite)->getReflectionAndNormalize(r); //!!!Change 0 to alpha
     rDotRef       = r->dot(reflectedSpin);
     
     for( uint i=0; i<(2*D_); i++ )
     {
       neighSite = hrect_->getNeighbour( latticeSite, i );
       
-      exponent = (2.0*J_/T_)*rDotRef*( r->dot(spins_->getSpin(neighSite)) );
+      exponent = (2.0*J_/T_)*rDotRef*( r->dot(spins_->getSpin(0, neighSite)) ); //!!!Change 0 to alpha
       
       if (exponent < 0 )
       { 
