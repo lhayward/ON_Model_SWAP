@@ -89,7 +89,7 @@ double ON_Model_Ngeq2::getEnergy()
   for( uint i=0; i<N_; i++ )
   { 
     currSpin    = spins_->getSpin(0, i); //!!!Change 0 to alpha
-    for( uint j=0; j<D_; j++ )
+    for( uint j=0; j<Dspat_; j++ )
     {
       neighbour =  spins_->getSpin( 0, hrect_->getNeighbour(i,j) ); //nearest neighbour along 
                                                                  //j direction
@@ -172,10 +172,10 @@ void ON_Model_Ngeq2::localUpdate(MTRand &randomGen)
   spin_old    = spins_->getSpin(0,latticeSite); //!!!Change 0 to alpha
   
   //loop to calculate the nearest neighbour sum:
-  for( uint i=0; i<D_; i++ )
+  for( uint i=0; i<Dspat_; i++ )
   { 
-    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i    ) ) ); //!!!Change 0 to alpha
-    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i+D_ ) ) ); //!!!Change 0 to alpha
+    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i        ) ) ); //!!!Change 0 to alpha
+    nnSum.add( spins_->getSpin( 0, hrect_->getNeighbour( latticeSite, i+Dspat_ ) ) ); //!!!Change 0 to alpha
   }
   
   //calculate the energy change for the proposed move:
@@ -281,7 +281,7 @@ void ON_Model_Ngeq2::wolffUpdate(MTRand &randomGen, uint start, uint end, bool p
     reflectedSpin = spins_->getSpin(0,latticeSite)->getReflectionAndNormalize(r); //!!!Change 0 to alpha
     rDotRef       = r->dot(reflectedSpin);
     
-    for( uint i=0; i<(2*D_); i++ )
+    for( uint i=0; i<(2*Dspat_); i++ )
     {
       neighSite = hrect_->getNeighbour( latticeSite, i );
       

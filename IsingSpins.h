@@ -17,16 +17,17 @@ class IsingSpins
     typedef unsigned int uint;
   
   private:
-    uint   alpha_;   //number of replicas
-    uint   N_;       //number of spins
-    bool** spins_;   //array of the spin degrees of freedom
+    uint    alpha_;   //number of replicas
+    uint    Ltau_;    //number of imaginary time slices
+    uint    Nspat_;   //number of spins in each spatial slice in each replica
+    bool*** spins_;   //array of the spin degrees of freedom
     
   public:
-    IsingSpins(uint alpha, uint N);
+    IsingSpins(uint alpha, uint Ltau, uint Nspat);
     virtual ~IsingSpins();
     
-    void flipSpin(uint a, uint i);
-    int  getSpin(uint a, uint i);
+    void flipSpin(uint a, uint t, uint i);
+    int  getSpin (uint a, uint t, uint i);
     void print();
     void randomize(MTRand &randomGen);
 };

@@ -34,11 +34,12 @@ class ON_Model
                                  //vec, but stored for efficiency purposes)
     
     //parameters of the lattice:
-    uint    D_;       //dimension
-    uint    N_;       //number of spins living on the hyperrectangle
+    uint    N_;       //total number of spins
     uint    alpha_;   //number of replicas (Renyi index)
-    uint*   L_;       //lattice's linear length in each spatial dimension
     uint    Ltau_;    //lattice's linear length in the imaginary time direction
+    uint*   L_;       //lattice's linear length in each spatial dimension
+    uint    Dspat_;   //spatial dimension
+    uint    Nspat_;   //number of spins living on the spatial hyperrectangle
     
     //acceptance rates for the two kinds of updates:
     int numAccept_local_;

@@ -18,9 +18,12 @@
 ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* lattice)
 { 
   const char EQUALS_CHAR = '=';
-  D_ = 0;
-  L_ = 0;
-  N_ = 0;
+  N_     = 0;
+  alpha_ = 0;
+  Ltau_  = 0;
+  L_     = 0;
+  Dspat_ = 0;
+  Nspat_ = 0;
   
   if( fin!=NULL && fin->is_open() )
   {
@@ -37,9 +40,11 @@ ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* 
   if( lattice != NULL )
   {
     hrect_ = lattice;
-    D_     = hrect_->getD();
+    Dspat_ = hrect_->getD();
     L_     = hrect_->getL();
-    N_     = hrect_->getN();
+    Nspat_ = hrect_->getN();
+    
+    N_     = alpha_*Ltau_*Nspat_;
   } //if for non-null Lattice object
   else
   {
