@@ -61,23 +61,44 @@ double Ising_Model::getEnergy()
   double  energyh       = 0;
   int     currSpin;
   int     neighbour;
+  uint    nextRep;
+  uint    nextTau;
   
-  for( uint i=0; i<Nspat_; i++ )
-  { 
-    currSpin    = spins_->getSpin(0, 0, i); //!!!Change zeros
-    
-    //nearest neighbour term:
-    for( uint j=0; j<Dspat_; j++ )
+  //loops over replicas:
+  for( uint a=0; a<alpha_; a++ )
+  {
+    //loop over imaginary time:
+    for( uint t=0; t<Ltau_; t++ )
     {
-      neighbour = spins_->getSpin( 0, 0, hrect_->getNeighbour(i,j) ); //nearest neighbour along
-                                                                   //j direction
-                                                                   //!!!Change zeros
-      energyJ   += currSpin*neighbour;
-    } //j
+      //loop over spatial indices:
+      for( uint i=0; i<Nspat_; i++ )
+      { 
+        currSpin    = spins_->getSpin(a,t,i);
     
-    //field term:
-    energyh += currSpin;
-  } //i
+        //nearest neighbour term in spatial direction:
+        for( uint j=0; j<Dspat_; j++ )
+        {
+          neighbour = spins_->getSpin(a,t,hrect_->getNeighbour(i,j)); //nearest neighbour along
+                                                                      //j direction
+          energyJ   += currSpin*neighbour;
+        } //j
+        
+        //nearest neighbour term in tau direction:
+        nextTau = (t+1)%Ltau_;
+        if( nextTau==0 )  //!!AND regA[i]
+        {
+          nextRep   = (a+1)%alpha_;
+          neighbour = spins_->getSpin(nextRep,nextTau,i);
+        }
+        else
+        { neighbour = spins_->getSpin(a,nextTau,i);}
+        energyJ   += currSpin*neighbour;
+    
+        //field term:
+        energyh += currSpin;
+      } //i
+    } //t
+  } //a
   
   return ((-1.0*J_*energyJ) + (-1.0*h_*energyh)) ;
 } //getEnergy()
@@ -168,8 +189,6 @@ void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
   int                clusterState;
   double             PAdd = 1.0 - exp(-2.0*J_/T_);
   double             deltaE_onsite;
-  double             PAcceptCluster;
-  double             rDotRef;
   std::vector<uint>  buffer;  //indices of spins to try to add to cluster (will loop until 
                               //buffer is empty)
   std::vector<uint>  cluster; //vector storing the indices of spins in the cluster
