@@ -31,7 +31,6 @@ ON_Model_Ngeq2::ON_Model_Ngeq2(uint spinDim, std::ifstream* fin, std::string out
   spins_ = new VectorSpins(alpha_, N_, spinDim_);
   randomizeLattice(randomGen);
   
-  measures.insert("sigma1");
   measures.insert("helicityMod_x");
   measures.insert("helicityMod_y");
 }
@@ -207,13 +206,11 @@ void ON_Model_Ngeq2::localUpdate(MTRand &randomGen)
 void ON_Model_Ngeq2::makeMeasurement()
 {
   double energyPerSpin = getEnergy()/(1.0*N_);
-  double sigma1PerSpin = getSigma1Tot()/(1.0*N_);
   double helicityMod_x = getHelicityModulus(0);
   double helicityMod_y = getHelicityModulus(1);
   
   measures.accumulate( "E",             energyPerSpin ) ;
   measures.accumulate( "ESq",           pow(energyPerSpin,2) );
-  measures.accumulate( "sigma1",        sigma1PerSpin );
   measures.accumulate( "helicityMod_x", helicityMod_x );
   measures.accumulate( "helicityMod_y", helicityMod_y );
 }
