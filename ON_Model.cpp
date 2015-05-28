@@ -166,6 +166,25 @@ void ON_Model::printParams()
             << "                        h = " << h_ << "\n";
 }
 
+/*************** randomizeCoords(MTRand &randomGen, uint& a, uint& t, uint& i) ****************
+* Uses the passed random number generator to randomize the three arguments {a, t, i} (passed 
+* by reference). These numbers will be randomized such that:
+* 0 <= a < alpha_,   0 <= t < Ltau_,   0 <= i < Nspat_
+* Note that, for efficiency, this method only needs to generate one random number instead of 
+* three.
+**********************************************************************************************/
+void ON_Model::randomizeCoords(MTRand &randomGen, uint& a, uint& t, uint& i)
+{
+  uint num = randomGen.randInt(N_-1);
+  
+  i   = num%Nspat_;
+  num = (num-i)/Nspat_;
+  
+  t = num%Ltau_;
+  
+  a = (num-t)/Ltau_;
+}
+
 /************************* writeClustHistoData(std::string fileName) *************************/
 void ON_Model::writeClustHistoData(std::string fileName)
 {
