@@ -144,9 +144,8 @@ void ON_Model::clearCluster(std::vector<uint> &cluster)
 uint ON_Model::getNeighRep_minusTau(uint a, uint t, uint i)
 {
   uint nextRep = a;
-  uint nextTau = (t-1+Ltau_)%Ltau_; //add Ltau_ to avoid taking the mod of a negative number
   
-  if( nextTau==(Ltau_-1) )  //!!AND regA[i]
+  if( t==0 )  //!!AND regA[i]
   { nextRep = (a-1+alpha_)%alpha_; } //add alpha_ to avoid taking the mod of a negative number
   
   return nextRep;
@@ -159,9 +158,8 @@ uint ON_Model::getNeighRep_minusTau(uint a, uint t, uint i)
 uint ON_Model::getNeighRep_plusTau(uint a, uint t, uint i)
 {
   uint nextRep = a;
-  uint nextTau = (t+1)%Ltau_;
   
-  if( nextTau==0 )  //!!AND regA[i]
+  if( t==(Ltau_-1) )  //!!AND regA[i]
   { nextRep   = (a+1)%alpha_; }
   
   return nextRep;

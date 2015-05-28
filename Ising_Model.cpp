@@ -110,9 +110,11 @@ int Ising_Model::getSigmaTot()
 void Ising_Model::localUpdate(MTRand &randomGen)
 { 
   //randomly selected spin location:
-  uint index_a;  //replica index
-  uint index_t;  //tau index
-  uint index_i; //spatial index
+  uint index_a;   //replica index
+  uint index_t;   //tau index
+  uint index_i;   //spatial index
+  uint neighTau;  //tau index for neighbour
+  uint neighRep;  //replica index for neighbour
   
   double deltaE;
   int    spin_old;    //previous state of spin (at randomly selected lattice site)
@@ -122,13 +124,22 @@ void Ising_Model::localUpdate(MTRand &randomGen)
   randomizeCoords(randomGen, index_a, index_t, index_i);
   spin_old = spins_->getSpin(index_a, index_t, index_i);
   
-  //loop to calculate the nearest neighbour sum:
+  //Calculate the nearest neighbour sum:
+  //Loop over spatial neighbours:
   for( uint d=0; d<Dspat_; d++ )
   { 
     nnSum += ( spins_->getSpin( index_a, index_t, hrect_->getNeighbour(index_i, d       ) ) 
              + spins_->getSpin( index_a, index_t, hrect_->getNeighbour(index_i, d+Dspat_) ) ); 
   }
-  //! Add in sum over tau neighbours
+  //Add in the contribution from +tau neighbour:
+  neighRep = getNeighRep_plusTau (index_a, index_t, index_i);
+  neighTau = (index_t+1)%Ltau_;
+  nnSum += spins_->getSpin( neighRep, neighTau, index_i );
+  
+  //Add in the contribution from -tau neighbour:
+  neighRep = getNeighRep_minusTau(index_a, index_t, index_i);
+  neighTau = (index_t-1+Ltau_)%Ltau_;
+  nnSum += spins_->getSpin( neighRep, neighTau, index_i );
   
   //calculate the energy change for the proposed move:
   deltaE = 2.0*J_*spin_old*nnSum + 2.0*h_*spin_old;
