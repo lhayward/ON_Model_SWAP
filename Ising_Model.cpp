@@ -61,7 +61,6 @@ double Ising_Model::getEnergy()
   double  energyh       = 0;
   int     currSpin;
   int     neighbour;
-  uint    nextRep;
   uint    nextTau;
   
   //loops over replicas:
@@ -76,22 +75,15 @@ double Ising_Model::getEnergy()
         currSpin    = spins_->getSpin(a,t,i);
     
         //nearest neighbour term in spatial direction:
-        for( uint j=0; j<Dspat_; j++ )
+        for( uint d=0; d<Dspat_; d++ )
         {
-          neighbour = spins_->getSpin(a,t,hrect_->getNeighbour(i,j)); //nearest neighbour along
-                                                                      //j direction
+          neighbour = spins_->getSpin(a,t,hrect_->getNeighbour(i,d)); //nearest neighbour along
+                                                                      //d direction
           energyJ   += currSpin*neighbour;
-        } //j
+        } //d
         
-        //nearest neighbour term in tau direction:
         nextTau = (t+1)%Ltau_;
-        if( nextTau==0 )  //!!AND regA[i]
-        {
-          nextRep   = (a+1)%alpha_;
-          neighbour = spins_->getSpin(nextRep,nextTau,i);
-        }
-        else
-        { neighbour = spins_->getSpin(a,nextTau,i);}
+        neighbour = spins_->getSpin( getNeighRep_plusTau(a,t,i),nextTau,i );
         energyJ   += currSpin*neighbour;
     
         //field term:

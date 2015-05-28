@@ -137,6 +137,36 @@ void ON_Model::clearCluster(std::vector<uint> &cluster)
   }*/
 } //clearCluster
 
+/*********************** getNeighRep_minusTau (uint a, uint t, uint i) ************************
+* Input: Coordinates (a, t, i)
+* Output: The replica coordinate for the neighbouring site in the minus tau direction
+**********************************************************************************************/
+uint ON_Model::getNeighRep_minusTau(uint a, uint t, uint i)
+{
+  uint nextRep = a;
+  uint nextTau = (t-1+Ltau_)%Ltau_; //add Ltau_ to avoid taking the mod of a negative number
+  
+  if( nextTau==(Ltau_-1) )  //!!AND regA[i]
+  { nextRep = (a-1+alpha_)%alpha_; } //add alpha_ to avoid taking the mod of a negative number
+  
+  return nextRep;
+}
+
+/************************ getNeighRep_plusTau (uint a, uint t, uint i) ************************
+* Input: Coordinates (a, t, i)
+* Output: The replica coordinate for the neighbouring site in the plus tau direction
+**********************************************************************************************/
+uint ON_Model::getNeighRep_plusTau(uint a, uint t, uint i)
+{
+  uint nextRep = a;
+  uint nextTau = (t+1)%Ltau_;
+  
+  if( nextTau==0 )  //!!AND regA[i]
+  { nextRep   = (a+1)%alpha_; }
+  
+  return nextRep;
+}
+
 /************************************** markWarmupDone() *************************************/
 void ON_Model::markWarmupDone()
 { 

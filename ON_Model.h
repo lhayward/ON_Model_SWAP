@@ -73,9 +73,11 @@ class ON_Model
     virtual void sweep              (MTRand &randomGen, bool pr) = 0;
     
   protected:
-    void clearCluster   (std::vector<uint> &cluster);
-    void randomizeCoords(MTRand &randomGen, uint& a, uint& t, uint& i);
-    uint uintPower      (uint base, uint exp);
+    void clearCluster        (std::vector<uint> &cluster);
+    uint getNeighRep_minusTau(uint a, uint t, uint i);
+    uint getNeighRep_plusTau (uint a, uint t, uint i);
+    void randomizeCoords     (MTRand &randomGen, uint& a, uint& t, uint& i);
+    uint uintPower           (uint base, uint exp);
 };
 
 #endif  // ON_MODEL_H
