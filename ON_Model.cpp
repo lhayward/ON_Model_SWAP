@@ -61,9 +61,23 @@ ON_Model::ON_Model(std::ifstream* fin, std::string outFileName, Hyperrectangle* 
   //starting the simulation):
   T_ = 1.0;
   
+  //initialize inCluster_ array:
   inCluster_ = new bool[N_];
   for( uint i=0; i<N_; i++ )
   { inCluster_[i] = 0; }
+  
+  //initialize inClusterNew_ array:
+  inClusterNew_ = new bool**[alpha_];
+  for( uint a=0; a<alpha_; a++ )
+  { 
+    inClusterNew_[a] = new bool*[Ltau_];
+    for( uint t=0; t<Ltau_; t++ )
+    {
+      inClusterNew_[a][t] = new bool[Nspat_];
+      for( uint i=0; i<Nspat_; i++ )
+      { inClusterNew_[a][t][i] = 0; }
+    } //t
+  } //a
   
   //Add measurement names to Measure object:
   measures.insert("E");
@@ -94,9 +108,29 @@ ON_Model::~ON_Model()
 { 
   fout.close(); 
   
+  //delete inCluster_ array:
   if( inCluster_ != NULL )
   { delete[] inCluster_; }
   inCluster_ = NULL;
+  
+  //delete the inClusterNew_ array:
+  for(uint a=0; a<alpha_; a++)
+  { 
+    for( uint t=0; t<Ltau_; t++ )
+    { 
+      if( inClusterNew_[a][t] != NULL )
+      { delete[] inClusterNew_[a][t]; }
+      inClusterNew_[a][t] = NULL;
+    } //t
+    
+    if( inClusterNew_[a] != NULL )
+    { delete[] inClusterNew_[a]; }
+    inClusterNew_[a] = NULL; 
+  } //a
+  
+  if( inClusterNew_ != NULL )
+  { delete[] inClusterNew_; }
+  inClusterNew_ = NULL;
   
   if( writeClusts_ )
   {

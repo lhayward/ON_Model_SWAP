@@ -32,6 +32,8 @@ class ON_Model
     bool*           inCluster_;  //boolean array for wolffUpdate indicating whether or not each
                                  //spin is in the cluster (redundant information to cluster 
                                  //vec, but stored for efficiency purposes)
+    bool***         inClusterNew_;  //new version of inCluster_ array: stores all three 
+                                    //coordinates of spins in cluster
     
     //parameters of the lattice:
     uint    N_;       //total number of spins

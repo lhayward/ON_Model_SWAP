@@ -111,9 +111,9 @@ void Ising_Model::localUpdate(MTRand &randomGen)
   uint index_a;   //replica index
   uint index_t;   //tau index
   uint index_i;   //spatial index
+  
   uint neighTau;  //tau index for neighbour
   uint neighRep;  //replica index for neighbour
-  
   double deltaE;
   int    spin_old;    //previous state of spin (at randomly selected lattice site)
   int    nnSum = 0;
@@ -178,7 +178,7 @@ void Ising_Model::sweep(MTRand &randomGen, bool pr)
   for( uint i=0; i<N1; i++ )
   { localUpdate(randomGen); }
   
-  wolffUpdate(randomGen, pr);
+  //wolffUpdate(randomGen, pr);
   
   for( uint i=0; i<N2; i++ )
   { localUpdate(randomGen); }
@@ -187,6 +187,11 @@ void Ising_Model::sweep(MTRand &randomGen, bool pr)
 /******************************* wolffUpdate(MTRand* randomGen) ******************************/
 void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
 {
+  //randomly selected spin location:
+  uint index_a;   //replica index
+  uint index_t;   //tau index
+  uint index_i;   //spatial index
+  
   uint               latticeSite;
   uint               neighSite;
   uint               clustSize;
@@ -200,10 +205,11 @@ void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
   buffer.reserve(N_);
   cluster.reserve(N_);
   
-  latticeSite = randomGen.randInt(Nspat_-1);
-  clusterState = spins_->getSpin(0, 0, latticeSite); //!!!Change zeros
-  inCluster_[latticeSite] = 1;
-  cluster.push_back(latticeSite);
+  //randomly select a spin on the lattice:
+  randomizeCoords(randomGen, index_a, index_t, index_i);
+  clusterState = spins_->getSpin(index_a, index_t, index_i);
+  inCluster_[latticeSite] = 1;  //!
+  cluster.push_back(latticeSite); //!
   buffer.push_back(latticeSite);
   
   while( !buffer.empty() )
