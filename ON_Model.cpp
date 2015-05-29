@@ -161,7 +161,10 @@ void ON_Model::clearCluster(std::vector<uint> &cluster)
   uint clustSize = (uint)cluster.size();
   
   for( uint i=0; i<clustSize; i++ )
-  { inCluster_[cluster[i]]=0; }
+  { 
+    inCluster_[cluster[i]]=0; 
+    inClusterNew_[cluster[i]]=0;
+  }
   
   //test to make sure the inCluster_ array was properly cleared (for testing purposes only):
   /*for( uint i=0; i<N_; i++ )

@@ -208,27 +208,31 @@ void Ising_Model::wolffUpdate(MTRand &randomGen, bool pr)
   //randomly select a spin on the lattice:
   randomizeCoords(randomGen, index_a, index_t, index_i);
   clusterState = spins_->getSpin(index_a, index_t, index_i);
-  inCluster_[latticeSite] = 1;  //!
+  inClusterNew_[index_a][index_t][index_i] = 1;
   cluster.push_back(latticeSite); //!
-  buffer.push_back(latticeSite);
+  buffer.push_back(latticeSite);  //!
   
   while( !buffer.empty() )
   {
     latticeSite = buffer.back();
     buffer.pop_back();
     
-    for( uint i=0; i<(2*Dspat_); i++ )
+    //loop over spatial neighbours:
+    for( uint d=0; d<(2*Dspat_); d++ )
     {
-      neighSite = hrect_->getNeighbour( latticeSite, i );
+      neighSite = hrect_->getNeighbour( index_i, d );
       
-      if ( !( inCluster_[ neighSite ] ) && ( spins_->getSpin(0, 0, neighSite) == clusterState ) 
-           && (randomGen.randDblExc() < PAdd) ) //!!!Change zeros
+      if ( !( inClusterNew_[index_a][index_t][neighSite] ) 
+           && ( spins_->getSpin(index_a, index_t, neighSite) == clusterState ) 
+           && (randomGen.randDblExc() < PAdd) )
       { 
-        inCluster_[ neighSite ] = 1;
-        cluster.push_back( neighSite );
-        buffer.push_back( neighSite );
+        inClusterNew_[index_a][index_t][neighSite] = 1;
+        cluster.push_back( neighSite ); //!
+        buffer.push_back( neighSite );  //!
       }
-    }  //for loop over neighbours
+    }  //for loop over spatial neighbours
+    
+    //!add loop over tau neighbours:
   } //while loop for buffer
   
   clustSize = cluster.size();
